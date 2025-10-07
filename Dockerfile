@@ -1,17 +1,18 @@
-FROM maven:3.8.7-openjdk-8 AS build
+FROM maven:3.8.7-eclipse-temurin-8 AS build
 
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+COPY . .
 
 RUN mvn clean package -DskipTests
 
 FROM tomcat:9.0
 
-RUN rm -rf /usr/local/tomcat/webapps/*
+WORKDIR /usr/local/tomcat/webapps
 
-COPY --from=build /app/target/maven-web-application.war /usr/local/tomcat/webapps/ROOT.war
+RUN rm -rf ./*
+
+COPY --from=build /app/target/maven-web-application.war ./ROOT.war
 
 EXPOSE 8080
 
