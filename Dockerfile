@@ -1,4 +1,4 @@
-FROM maven:3.8.7-eclipse-temurin-8 AS build
+FROM maven:3.9.4-amazoncorretto AS build
 
 WORKDIR /app
 
@@ -9,8 +9,6 @@ RUN mvn clean package -DskipTests
 FROM tomcat:9.0
 
 WORKDIR /usr/local/tomcat/webapps
-
-RUN rm -rf ./*
 
 COPY --from=build /app/target/maven-web-application.war ./ROOT.war
 
